@@ -6,7 +6,8 @@
         "parking": "./bin/parking_lot"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "testFunction": "bin/run_functional_tests",
+        "test": "mocha functional_spec/spec/end_to_end.spec.js & mocha functional_spec/spec/parking_lot.spec.js"
     },
     "author": "",
     "license": "ISC",

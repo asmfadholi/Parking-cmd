@@ -11,3 +11,21 @@ child = exec('npm install',
             console.log('exec error: ' + error);
         }
     });
+
+child = exec('npm install mocha -g',
+    function(error, stdout, stderr) {
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        if (error !== null) {
+            console.log('exec error: ' + error);
+        }
+    });
+
+child = exec('npm run testFunction',
+    function(error, stdout, stderr) {
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        if (error !== null) {
+            console.log('exec error: ' + error);
+        }
+    });

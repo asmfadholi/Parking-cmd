@@ -1,5 +1,13 @@
 #!/usr/bin/env node
 
-const math = require('./parking_lot');
+var exec = require('child_process').exec,
+    child;
 
-console.log(math)
+child = exec('npm run test',
+    function(error, stdout, stderr) {
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        if (error !== null) {
+            console.log('exec error: ' + error);
+        }
+    });
