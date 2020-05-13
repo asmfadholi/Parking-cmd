@@ -1,7 +1,17 @@
-# Add script to:
-# * Install dependencies
-# * Build/Compile
-# * Run Test Suit to validate
-#
-# After this is run, bin/parking_lot
-# should Just Work.
+#!/usr/bin/env node
+
+const npm = require('npm');
+npm.load(function(err) {
+    // handle errors
+    console.log(err);
+    // install module
+    npm.commands.install(['cli-table'], function(er, data) {
+        // log errors or data
+        console.log(err);
+        console.log(data);
+    });
+    npm.on('log', function(message) {
+        // log installation progress
+        console.log(message);
+    });
+});
