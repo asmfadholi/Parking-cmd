@@ -2,21 +2,80 @@
 
 const readline = require('readline');
 const Table = require('cli-table');
-
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
     terminal: false
 });
 
-rl.on('line', function(cmd) {
-    const spliData = cmd.split(' ');
+function executeData(data) {
+    const spliData = data.split(' ');
     if (spliData.length === 1) {
         checkSingleArgument(spliData[0]);
     } else {
         checkMultipleArguments(spliData);
     }
-});
+}
+
+if (process.argv.length < 3) {
+    rl.on('line', function(cmd) {
+        executeData(cmd);
+    });
+} else {
+    const fs = require('fs'),
+        filename = process.argv[2];
+    fs.readFile(filename, 'utf8', function(err, data) {
+        if (err) throw err;
+        const splitData = data.split('\n');
+        splitData.forEach((argu) => {
+            executeData(argu);
+        });
+    });
+}
+
+
+// if (process.argv.length < 2) {
+//     const rl = readline.createInterface({
+//         input: process.stdin,
+//         output: process.stdout,
+//         terminal: false
+//     });
+
+//     rl.on('line', function(cmd) {
+//         const spliData = cmd.split(' ');
+//         if (spliData.length === 1) {
+//             checkSingleArgument(spliData[0]);
+//         } else {
+//             checkMultipleArguments(spliData);
+//         }
+//     });
+//     console.log('Usage: node ' + process.argv[1] + ' FILENAME');
+// } else {
+// var fs = require('fs'),
+//     filename = process.argv[2];
+// fs.readFile(filename, 'utf8', function(err, data) {
+//     if (err) throw err;
+//     console.log('OK: ' + filename);
+//     const splitData = data.split("\n");
+//     console.log(splitData);
+// });
+
+
+// console.log(process.argv.length, 'sadasd')
+// const rl = readline.createInterface({
+//     input: process.stdin,
+//     output: process.stdout,
+//     terminal: false
+// });
+
+// rl.on('line', function(cmd) {
+//     const spliData = cmd.split(' ');
+//     if (spliData.length === 1) {
+//         checkSingleArgument(spliData[0]);
+//     } else {
+//         checkMultipleArguments(spliData);
+//     }
+// });
 
 let globalData = [];
 
