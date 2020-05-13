@@ -171,4 +171,18 @@ describe('Interactive Test', function() {
         // restore the original function
         spy.restore();
     });
+
+    it('Reset program parking lot', () => {
+        // "spy" on `console.log()`
+        let spy = sinon.spy(console, 'log');
+
+        // call the function that needs to be tested
+        executeData('reset');
+
+        // assert that it was called with the correct value
+        assert(spy.calledWith('Your parking lot reseted successfully'));
+
+        // restore the original function
+        spy.restore();
+    });
 });

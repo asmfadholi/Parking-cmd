@@ -10,22 +10,23 @@ child = exec('npm install',
         if (error !== null) {
             console.log('exec error: ' + error);
         }
+        installMocha();
     });
 
-child = exec('npm install mocha -g',
-    function(error, stdout, stderr) {
-        console.log('stdout: ' + stdout);
-        console.log('stderr: ' + stderr);
-        if (error !== null) {
-            console.log('exec error: ' + error);
-        }
-    });
+function installMocha() {
+    child = exec('npm install mocha -g',
+        function(error, stdout, stderr) {
+            console.log('stdout: ' + stdout);
+            console.log('stderr: ' + stderr);
+            if (error !== null) {
+                console.log('exec error: ' + error);
+            }
+            executeTestCase();
+        });
 
-child = exec('npm run testFunction',
-    function(error, stdout, stderr) {
-        console.log('stdout: ' + stdout);
-        console.log('stderr: ' + stderr);
-        if (error !== null) {
-            console.log('exec error: ' + error);
-        }
-    });
+}
+
+function executeTestCase() {
+    var shell = require("shelljs");
+    shell.exec("bin/run_functional_tests");
+}
