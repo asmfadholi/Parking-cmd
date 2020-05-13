@@ -21,7 +21,7 @@ if (process.argv.length < 3) {
     rl.on('line', function(cmd) {
         executeData(cmd);
     });
-} else {
+} else if (process.argv[2].includes('.txt')) {
     const fs = require('fs'),
         filename = process.argv[2];
     fs.readFile(filename, 'utf8', function(err, data) {
@@ -89,7 +89,7 @@ function registrationNumberCarWithColour(colour) {
     if (dataFilter.length > 0) {
         console.log(dataFilter.join(', '))
     } else {
-        console.log('Not found')
+        console.log('Not found');
     }
 }
 
@@ -99,7 +99,7 @@ function slotNumberCarWithColour(colour) {
     const filterAvailableData = globalData.filter((data) => data !== null);
     filterAvailableData.forEach((data, index) => {
         if (data[1].toLowerCase() === colour.toLowerCase()) {
-            dataFilter.push((Number(index) + 1));
+            dataFilter.push(String((Number(index) + 1)));
         }
     })
     if (dataFilter.length > 0) {
@@ -115,13 +115,13 @@ function slotNumberCarWithRegistration(registration) {
     const filterAvailableData = globalData.filter((data) => data !== null);
     filterAvailableData.some((data, index) => {
         if (data[0].toUpperCase() === registration.toUpperCase()) {
-            console.log(Number(index) + 1);
+            console.log(String(Number(index) + 1));
             dataFilled = true;
             return dataFilled;
         }
     })
     if (dataFilled) return;
-    console.log('Not found')
+    console.log('Not found');
 }
 
 function checkMultipleArguments(data) {
@@ -224,3 +224,5 @@ function checkSingleArgument(data) {
             console.log('Command is not found please check list command using "help"');
     }
 }
+
+module.exports = executeData;
