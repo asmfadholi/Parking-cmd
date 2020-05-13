@@ -12,11 +12,129 @@ const rl = readline.createInterface({
 rl.on('line', function(cmd) {
     const spliData = cmd.split(' ');
     if (spliData.length === 1) {
-        checkSingleArgument(spliData[0])
+        checkSingleArgument(spliData[0]);
     } else {
-        console.log('The command more than 1 arguments ' + spliData);
+        checkMultipleArguments(spliData);
     }
 });
+
+let globalData = [];
+
+function createParkingLot(number) {
+    if (globalData.length > 0) {
+        console.log('You have created parking lot, please reset first to create new (use -> "reset")');
+        return;
+    }
+
+    if (Number(number) > 0) {
+        for (let i = 0; i < Number(number); i++) {
+            globalData.push(null);
+        }
+        // globalData.length = Number(number);
+        console.log('Created a parking lot with ' + number + ' slots');
+    } else {
+        console.log('Please input number data correctly and more than 0');
+    }
+}
+
+function parking(registration, colour = 'unknown') {
+    if (!isCreated()) return;
+    let dataFilled = false;
+    globalData.some((data, index) => {
+        if (!data) {
+            globalData[index] = [registration, colour];
+            console.log('Allocated slot number: ' + (Number(index) + 1));
+            dataFilled = true;
+        }
+        return dataFilled;
+    });
+    if (dataFilled) return;
+    console.log('Sorry, parking lot is full');
+}
+
+function leavePark(number) {
+    if (!isCreated()) return;
+    const numberSlot = Number(number);
+    if (numberSlot > 0) {
+        globalData[numberSlot - 1] = null;
+        console.log('Slot number ' + number + ' is free')
+    } else {
+        console.log('Please use correct slot number');
+    }
+}
+
+function registrationNumberCarWithColour(colour) {
+    if (!isCreated()) return;
+    let dataFilter = [];
+    const filterAvailableData = globalData.filter((data) => data !== null);
+    filterAvailableData.forEach((data) => {
+        if (data[1].toLowerCase() === colour.toLowerCase()) {
+            dataFilter.push(data[0]);
+        }
+    })
+    if (dataFilter.length > 0) {
+        console.log(dataFilter.join(', '))
+    } else {
+        console.log('Not found')
+    }
+}
+
+function slotNumberCarWithColour(colour) {
+    if (!isCreated()) return;
+    let dataFilter = [];
+    const filterAvailableData = globalData.filter((data) => data !== null);
+    filterAvailableData.forEach((data, index) => {
+        if (data[1].toLowerCase() === colour.toLowerCase()) {
+            dataFilter.push((Number(index) + 1));
+        }
+    })
+    if (dataFilter.length > 0) {
+        console.log(dataFilter.join(', '))
+    } else {
+        console.log('Not found')
+    }
+}
+
+function slotNumberCarWithRegistration(registration) {
+    if (!isCreated()) return;
+    let dataFilled = false;
+    const filterAvailableData = globalData.filter((data) => data !== null);
+    filterAvailableData.some((data, index) => {
+        if (data[0].toUpperCase() === registration.toUpperCase()) {
+            console.log(Number(index) + 1);
+            dataFilled = true;
+            return dataFilled;
+        }
+    })
+    if (dataFilled) return;
+    console.log('Not found')
+}
+
+function checkMultipleArguments(data) {
+
+    switch (data[0]) {
+        case 'create_parking_lot':
+            createParkingLot(data[1]);
+            break;
+        case 'park':
+            parking(data[1], data[2]);
+            break;
+        case 'leave':
+            leavePark(data[1]);
+            break;
+        case 'registration_numbers_for_cars_with_colour':
+            registrationNumberCarWithColour(data[1]);
+            break;
+        case 'slot_numbers_for_cars_with_colour':
+            slotNumberCarWithColour(data[1]);
+            break;
+        case 'slot_number_for_registration_number':
+            slotNumberCarWithRegistration(data[1]);
+            break;
+        default:
+            console.log('Command is not found please check list command using "help"');
+    }
+}
 
 function tableHelp() {
     const dataHelp = [
@@ -28,6 +146,7 @@ function tableHelp() {
         ['slot_number_for_registration_number $plat-number ', 'for checking number slot of cars in the park using plat-number'],
         ['help', 'for showing list of command provided'],
         ['status', 'for checking current slot of park'],
+        ['reset', 'for reseting current slot of park'],
         ['exit', 'for exit the program'],
     ]
     const table = new Table({
@@ -40,10 +159,22 @@ function tableHelp() {
     console.log(table.toString());
 }
 
+function isCreated() {
+    if (globalData.length < 1) {
+        console.log('Please create slot of park first(ex: "create_parking_lot 5")');
+        return false;
+    }
+    return true;
+}
+
 function tableStatus() {
-    const dataStatus = [
-        ['1', 'BB-66-77-II', 'Red'],
-    ]
+    const dataStatus = [];
+    if (!isCreated()) return;
+    globalData.forEach((data, index) => {
+        if (data) {
+            dataStatus.push([Number(index) + 1, data[0], data[1]])
+        }
+    })
     const table = new Table({
         head: ['Slot no.', 'Registration no.', 'Colour'],
         colWidths: [20, 40, 30]
@@ -54,6 +185,11 @@ function tableStatus() {
     console.log(table.toString());
 }
 
+function resetSlot() {
+    globalData = [];
+    console.log('Your parking lot reseted successfully');
+}
+
 function checkSingleArgument(data) {
 
     switch (data) {
@@ -62,6 +198,9 @@ function checkSingleArgument(data) {
             break;
         case 'help':
             tableHelp();
+            break;
+        case 'reset':
+            resetSlot();
             break;
         case 'exit':
             console.log('Goodbye...!');
